@@ -1,1 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 
+<title>KSS AI</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+background:#07070a;
+font-family:'Inter',sans-serif;
+color:white;
+}
+
+/* APP */
+.app{
+height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+/* HEADER */
+.header{
+height:78px;
+padding:14px 16px;
+display:flex;
+align-items:center;
+gap:12px;
+background:rgba(255,255,255,.03);
+backdrop-filter:blur(20px);
+border-bottom:1px solid rgba(255,255,255,.04);
+}
+
+.avatar{
+width:44px;
+height:44px;
+border-radius:50%;
+background:#16161d center/cover no-repeat;
+box-shadow:0 0 14px rgba(255,255,255,.06);
+}
+
+.info{
+display:flex;
+flex-direction:column;
+}
+
+.info h1{
+font-size:16px;
+font-weight:600;
+}
+
+.info span{
+font-size:12px;
+color:#8b8b94;
+margin-top:2px;
+}
+
+/* CHAT */
+.chat{
+flex:1;
+overflow-y:auto;
+padding:16px;
+display:flex;
+flex-direction:column;
+gap:12px;
+scroll-behavior:smooth;
+}
+
+.chat::-webkit-scrollbar{
+display:none;
+}
+
+/* MSG */
+.msg{
+max-width:78%;
+padding:13px 14px;
+font-size:15px;
+line-height:1.45;
+border-radius:22px;
+word-wrap:break-word;
+animation:show .18s ease;
+}
+
+.bot{
+align-self:flex-start;
+background:#15151a;
+border-bottom-left-radius:8px;
+}
+
+.user{
+align-self:flex-end;
+background:linear-gradient(180deg,#1f1f24,#0e0e11);
+border:1px solid rgba(255,255,255,.04);
+border-bottom-right-radius:8px;
+}
+
+/* TYPING */
+.typing{
+display:flex;
+gap:5px;
+padding:14px 16px;
+background:#15151a;
+width:72px;
+border-radius:20px;
+border-bottom-left-radius:8px;
+}
+
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#777;
+animation:bounce 1s infinite;
+}
+
+.dot:nth-child(2){animation-delay:.15s;}
+.dot:nth-child(3){animation-delay:.30s;}
+
+/* INPUT */
+.bottom{
+padding:12px;
+background:rgba(255,255,255,.03);
+backdrop-filter:blur(20px);
+border-top:1px solid rgba(255,255,255,.04);
+}
+
+.bar{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.input{
+flex:1;
+height:50px;
+border:none;
+outline:none;
+border-radius:18px;
+padding:0 16px;
+background:#15151a;
+color:white;
+font-size:15px;
+}
+
+.send{
+width:50px;
+height:50px;
+border:none;
+border-radius:50%;
+background:linear-gradient(180deg,#2b2b31,#111114);
+color:white;
+font-size:18px;
+cursor:pointer;
+box-shadow:0 8px 18px rgba(0,0,0,.35);
+transition:.15s;
+}
+
+.send:active{
+transform:scale(.94);
+}
+
+@keyframes show{
+from{opacity:0;transform:translateY(8px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes bounce{
+0%,80%,100%{transform:scale(.7);opacity:.4;}
+40%{transform:scale(1);opacity:1;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div class="header">
+<div class="avatar" id="avatar"></div>
+
+<div class="info">
+<h1 id="name">KSS AI</h1>
+<span id="status">always online</span>
+</div>
+</div>
+
+<div class="chat" id="chat">
+
+<div class="msg bot">Привет 😎 Я готов работать.</div>
+
+</div>
+
+<div class="bottom">
+<div class="bar">
+<input class="input" id="input" placeholder="Сообщение...">
+<button class="send" onclick="sendMessage()">➜</button>
+</div>
+</div>
+
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+const user = tg.initDataUnsafe.user;
+
+if(user){
+
+document.getElementById("name").innerText =
+user.first_name || "User";
+
+document.getElementById("status").innerText =
+"ID: " + user.id;
+
+if(user.photo_url){
+document.getElementById("avatar").style.backgroundImage =
+"url('" + user.photo_url + "')";
+}
+
+}
+
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+async function sendMessage(){
+
+let text = input.value.trim();
+if(!text) return;
+
+chat.innerHTML += `
+<div class="msg user">${text}</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+input.value = "";
+
+chat.innerHTML += `
+<div class="typing" id="typing">
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+
+setTimeout(()=>{
+
+document.getElementById("typing").remove();
+
+chat.innerHTML += `
+<div class="msg bot">Скоро сюда подключим Grok 😎</div>
+`;
+
+chat.scrollTop = chat.scrollHeight;
+
+},1200);
+
+}
+
+input.addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+sendMessage();
+}
+});
+</script>
+
+</body>
+</html>
