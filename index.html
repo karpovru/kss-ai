@@ -155,16 +155,26 @@ outline:none;
 
 border-radius:14px;
 overflow:hidden;
+position:relative;
 
-background-color:#1a1a22;
-background-image:url('input.png');
-background-position:center;
-background-repeat:no-repeat;
-background-size:180% 180%;
+background:#16161d;
 
 color:#fff;
 font-size:15px;
 font-family:'Inter',sans-serif;
+}
+
+.input::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:url('input.png') center center no-repeat;
+background-size:220% 220%;
+opacity:.55;
+mix-blend-mode:screen;
+
+pointer-events:none;
 }
 
 .send{
