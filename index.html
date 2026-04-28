@@ -16,11 +16,30 @@ box-sizing:border-box;
 -webkit-tap-highlight-color:transparent;
 }
 
+@font-face{
+font-family:'SF Pro';
+src:url('./fonts/SF-Pro-Display-Regular.otf') format('otf');
+font-weight:400;
+}
+
+@font-face{
+font-family:'SF Pro';
+src:url('./fonts/SF-Pro-Display-Medium.otf') format('otf');
+font-weight:500;
+}
+
+@font-face{
+font-family:'SF Pro';
+src:url('./fonts/SF-Pro-Display-Bold.otf') format('otf');
+font-weight:700;
+}
+
+
 body{
 height:100vh;
 overflow:hidden;
 background:#07070a;
-font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",sans-serif;
+font-family:'SF Pro', sans-serif;
 color:white;
 }
 
@@ -30,6 +49,7 @@ height:100vh;
 display:flex;
 flex-direction:column;
 }
+
 
 /* HEADER */
 .header{
